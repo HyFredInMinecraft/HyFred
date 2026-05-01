@@ -14,7 +14,7 @@ let TU = []
 let TN = 150
 let TUSpeed = 20
 let Transparency = 15
-let BounceNum = 0
+let BounceNum = -1
 let Count = false
 let Clicked = false
 let Dragging = false
@@ -25,11 +25,15 @@ let HaveGrab = true
 let HaveThrown = true
 let ShowBounce = false
 let ShowBounceFor = 200
-let EX,EY
+let DE = false
+let ESkip = []
+let ENum = 0
+let EX = []
+let EY = []
 let Elastic = false
-let DtoE
-let AtoE
-let MtoE = 2000
+let DtoE = []
+let AtoE = []
+let MtoE = [2000]
 let RClicked = false
 let Points = 0
 let PointsCount = false
@@ -231,16 +235,23 @@ function draw() {
   
   if(mouseIsPressed)
     {
+      Start = false
       if(mouseButton == RIGHT)
         {
-          if(MtoE > 40)
+          for(let i =0; i<= ENum; i++)
+            {
+              if(MtoE[i] > 40)
             {
               RClicked = true
 
             }else
               {          
-              Elastic = false
+              MtoE[i] = 200
+                ESkip.push(i)
+                DE = true
               }
+            }
+          
           
         }
       if(mouseButton == LEFT)
@@ -250,13 +261,22 @@ function draw() {
       
     }else
       {
-        if(RClicked == true)
+        if(RClicked == true && DE == false)
           {
             Elastic = true
-            EX = mouseX
-            EY = mouseY
+            //if(EX.indexOf(mouseX) == -1)
+              //{
+                EX.push(mouseX)
+                EY.push(mouseY)
+                ENum++
+            
+             // }
           }
-        MtoE = 200
+        if(DE == true)
+          {
+            DE = false
+          }
+        MtoE.push(200)
         Clicked = false
         RClicked = false
         if(Dragging == true)
@@ -286,16 +306,24 @@ function draw() {
   
   if(Elastic == true)
     {
-      AtoE = atan2((EY-Y),(EX-X))
-      DtoE = abs(sqrt(((EX-X)*(EX-X))+((EY-Y)*(EY-Y))))
-      Motion[0] += cos(AtoE)*(DtoE/100)
-      Motion[1] += sin(AtoE)*(DtoE/100)
+      for(let i = 0;i<=ENum-1;i++)
+        {
+          if(ESkip.indexOf(i) == -1)
+            {
+              AtoE[i] = atan2((EY[i]-Y),(EX[i]-X))
+      DtoE[i] = abs(sqrt(((EX[i]-X)*(EX[i]-X))+((EY[i]-Y)*(EY[i]-Y))))
+      Motion[0] += cos(AtoE[i])*(DtoE[i]/100)
+      Motion[1] += sin(AtoE[i])*(DtoE[i]/100)
   stroke(60,73,82)
   fill(60,73,82)
   strokeWeight(W/4)
-      line(X,Y,EX,EY)
-      circle(EX,EY,W/8)
-      MtoE = abs(sqrt(((EX-mouseX)*(EX-mouseX))+((EY-mouseY)*(EY-mouseY))))
+      line(X,Y,EX[i],EY[i])
+      circle(EX[i],EY[i],W/8)
+      MtoE[i] = abs(sqrt(((EX[i]-mouseX)*(EX[i]-mouseX))+((EY[i]-mouseY)*(EY[i]-mouseY))))
+            }
+          
+        }
+      
     }
   
   for(let i=0;i<=TN;i++)
@@ -313,8 +341,16 @@ function draw() {
       
     }
   
-  
-  
+  textSize(15)
+  noStroke()
+  fill(0)
+  /*text(EX,100,20)    //For Elastic Testing
+  text(EY,100,40)
+  text(DtoE,100,60)
+  text(AtoE,100,80)
+  text(ENum,100,100)
+  text(DE,100,120)
+  text(ESkip,100,140)*/
   
   fill(248, 250, 252)
   stroke(60,73,82)
