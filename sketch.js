@@ -31,12 +31,24 @@ let DtoE
 let AtoE
 let MtoE = 2000
 let RClicked = false
+let Points = 0
+let PointsCount = false
+let WhichSound
+let PlaySound = false
+let Bounce1;
+let Bounce2;
+let Bounce3;
+let Bounce4;
+let Bounce5;
+let Bounce6;
+let Start = true
+let ShowPoints = false
+let StartCount = 0
 
 
 let Weight = 1      //Physics
 let mouseWeight = 5
 let Friction = 0.05
-let Gravity = 9.81
 
 
 let Motion = [0,0]    //Starting
@@ -45,8 +57,21 @@ let Y = 200
 let W = 25
 let H = 25
 let StartMiddle = true
+let Volume = 2
 
 function setup() {
+  Bounce1 = loadSound("Sounds/Bounce1.mp3")
+  Bounce2 = loadSound("Sounds/Bounce2.mp3")
+  Bounce3 = loadSound("Sounds/Bounce3.mp3")
+  Bounce4 = loadSound("Sounds/Bounce4.mp3")
+  Bounce5 = loadSound("Sounds/Bounce5.mp3")
+  Bounce6 = loadSound("Sounds/Bounce6.mp3")
+  Bounce1.setVolume(Volume)
+  Bounce2.setVolume(Volume)
+  Bounce3.setVolume(Volume)
+  Bounce4.setVolume(Volume)
+  Bounce5.setVolume(Volume)
+  Bounce6.setVolume(Volume)
   Font = loadFont("/Fonts/Font.ttf")
   NumberFont = loadFont("/Fonts/NumberFont.ttf")
   
@@ -92,6 +117,10 @@ function draw() {
   if(DtoLX == 0)
     {
           Motion[0] = -Motion[0]
+      if(Start == false)
+        {
+          PlayTheSound()
+        }
       if(Count == true)
         {
          BounceNum++
@@ -101,16 +130,37 @@ function draw() {
   if(DtoLY == 0)
     {
           Motion[1] = -Motion[1]
+      if(Start == false)
+        {
+          PlayTheSound()
+        }
       if(Count == true)
         {
           BounceNum++
         }
-          
+          Motion[1]+=0.001
     }
     
   Motion[0] = lerp(Motion[0],0,Friction)
   Motion[1] = lerp(Motion[1],0,Friction)
-  
+  if(abs(Motion[0]) <= 0.1)
+    {
+      StartCount+=1
+    }else
+      {
+        StartCount = 0
+      }
+  if(abs(Motion[1]) <= 0.1)
+    {
+      StartCount+=1
+    }else
+      {
+        StartCount = 0
+      }
+  if(StartCount >= 150)
+    {
+      Start=true
+    }
   
   DistanceToMouse = sqrt((abs(Y-mouseY)*abs(Y-mouseY))+(abs(X-mouseX)*abs(X-mouseX)))
   if(DistanceToMouse >= W)
@@ -123,8 +173,22 @@ function draw() {
             Newtons = (0.936*mouseWeight)*mouseSpeed
             Motion[0] += cos(AngleToMouse+180)*((0.936*(1/Weight))*Newtons)
         Motion[1] += sin(AngleToMouse+180)*((0.936*(1/Weight))*Newtons)
+            
+                PlayTheSound()
+            
+            if(PointsCount == true)
+        {
+          PointsCount = false
+          Points += BounceNum
+        }
             BounceNum=0
         Count = true
+            if(PointsCount == true)
+        {
+          PointsCount = false
+          Points += BounceNum
+        }
+            PointsCount = true
             HaveHit = true
             if(HaveHit == true && HaveGrab == true && HaveThrown == true)
     {
@@ -140,6 +204,11 @@ function draw() {
                   HoldA=AngleToMouse
                 }
               
+                if(PointsCount == true)
+        {
+          PointsCount = false
+          Points += BounceNum
+        }
               BounceNum=0
         Count = true
               Motion = [0,0]
@@ -153,6 +222,11 @@ function draw() {
   if(abs(Motion[0]) < 0.1 && abs(Motion[1]) < 0.1)
     {
       Count = false
+      if(PointsCount == true)
+        {
+          PointsCount = false
+          Points += BounceNum
+        }
     }
   
   if(mouseIsPressed)
@@ -190,7 +264,9 @@ function draw() {
             Newtons = (0.936*mouseWeight)*mouseSpeed
             Motion[0] += cos(AngleToMouse)*((0.936*(0.5/Weight))*Newtons)
         Motion[1] += sin(AngleToMouse)*((0.936*(0.5/Weight))*Newtons)
+            
             Count = true
+            PointsCount = true
             if(HaveHit == true && HaveGrab == true && HaveThrown == true)
     {
       ShowBounce = true
@@ -237,17 +313,31 @@ function draw() {
       
     }
   
+  
+  
+  
   fill(248, 250, 252)
   stroke(60,73,82)
   strokeWeight(2.5)
   ellipse(X,Y,2*W,2*H)
   
+  textAlign(LEFT)
   textFont(NumberFont)
   noStroke()
   textStyle(BOLD)
   fill(240, 245, 246)
   textSize(60)
-  text(BounceNum,40,60)
+  text(BounceNum,20,60)
+  textAlign(CENTER)
+  
+  if(ShowPoints==true)
+    {
+      textAlign(RIGHT)
+  textWidth(35*Points.length)
+  text(Points,width-20,60)
+  textAlign(CENTER)
+    }
+  
   
   textFont(Font)
   if(HaveHit == false)
@@ -268,3 +358,37 @@ function draw() {
       ShowBounceFor++
     }
 }
+
+function PlayTheSound()
+    {
+      if(Dragging == false)
+        {
+          Start = false
+      WhichSound = round(random(1,6))
+      if(WhichSound == 1)
+        {
+          Bounce1.play()
+        }
+      if(WhichSound == 2)
+        {
+          Bounce2.play()
+        }
+      if(WhichSound == 3)
+        {
+          Bounce3.play()
+        }
+      if(WhichSound == 4)
+        {
+          Bounce4.play()
+        }
+      if(WhichSound == 5)
+        {
+          Bounce5.play()
+        }
+      if(WhichSound == 6)
+        {
+          Bounce6.play()
+        }
+        }
+      
+    }
