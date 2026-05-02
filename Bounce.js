@@ -45,9 +45,11 @@ let Bounce3;
 let Bounce4;
 let Bounce5;
 let Bounce6;
+let Hit;
 let Start = true
 let ShowPoints = false
 let StartCount = 0
+let PlayHitSound = 0
 
 
 let Weight = 1      //Physics
@@ -70,12 +72,14 @@ function setup() {
   Bounce4 = loadSound("Sounds/Bounce4.mp3")
   Bounce5 = loadSound("Sounds/Bounce5.mp3")
   Bounce6 = loadSound("Sounds/Bounce6.mp3")
+  Hit = loadSound("Sounds/Hit.mp3")
   Bounce1.setVolume(Volume)
   Bounce2.setVolume(Volume)
   Bounce3.setVolume(Volume)
   Bounce4.setVolume(Volume)
   Bounce5.setVolume(Volume)
   Bounce6.setVolume(Volume)
+  Hit.setVolume(1)
   Font = loadFont("/Fonts/Font.ttf")
   NumberFont = loadFont("/Fonts/NumberFont.ttf")
   
@@ -175,10 +179,10 @@ function draw() {
         if(Clicked == false)
           {
             Newtons = (0.936*mouseWeight)*mouseSpeed
-            Motion[0] += cos(AngleToMouse+180)*((0.936*(1/Weight))*Newtons)
-        Motion[1] += sin(AngleToMouse+180)*((0.936*(1/Weight))*Newtons)
+            Motion[0] += cos(AngleToMouse+180)*(((Weight))*Newtons)
+        Motion[1] += sin(AngleToMouse+180)*(((Weight))*Newtons)
             
-                PlayTheSound()
+                PlayTheHitSound()
             
             if(PointsCount == true)
         {
@@ -341,6 +345,11 @@ function draw() {
       
     }
   
+  if(PlayHitSound > 0)
+    {
+      PlayHitSound-=1
+    }
+  
   textSize(15)
   noStroke()
   fill(0)
@@ -428,3 +437,13 @@ function PlayTheSound()
         }
       
     }
+
+function PlayTheHitSound()
+{
+  if(Dragging == false && PlayHitSound == 0)
+        {
+          Start = false
+          Hit.play()
+          PlayHitSound = 15
+        }
+}
