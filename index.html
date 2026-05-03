@@ -17,23 +17,11 @@
 <img src="Logos/Bounce.png" id="bounceImg" style="cursor: pointer; width:200px">
 
 <script>
-let loaded = false;
 
 document.getElementById("bounceImg").onclick = function () {
-    if (!loaded) {
-        // load p5 library first
-        let p5script = document.createElement("script");
-        p5script.src = "https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js";
+    <script scr="Bounce.js">
 
-        p5script.onload = function () {
-            // then load your sketch
-            let sketch = document.createElement("script");
-            sketch.src = "Bounce.js";
-            document.body.appendChild(sketch);
-        };
-
-        document.body.appendChild(p5script);
-        loaded = true;
+  </script>
     }
 };
 </script>
