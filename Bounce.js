@@ -447,3 +447,7 @@ function PlayTheHitSound()
           PlayHitSound = 15
         }
 }
+
+function startBounce() {
+    alert("Bounce script is running!");
+}
