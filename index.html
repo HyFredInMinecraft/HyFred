@@ -21,17 +21,19 @@ let loaded = false;
 
 document.getElementById("bounceImg").onclick = function () {
     if (!loaded) {
-        let script = document.createElement("script");
-        script.src = "Bounce.js";
+        // load p5 library first
+        let p5script = document.createElement("script");
+        p5script.src = "https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js";
 
-        script.onload = function () {
-            startBounce();
+        p5script.onload = function () {
+            // then load your sketch
+            let sketch = document.createElement("script");
+            sketch.src = "Bounce.js";
+            document.body.appendChild(sketch);
         };
 
-        document.body.appendChild(script);
+        document.body.appendChild(p5script);
         loaded = true;
-    } else {
-        startBounce(); // run again without reloading
     }
 };
 </script>
