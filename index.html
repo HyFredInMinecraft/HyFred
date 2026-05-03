@@ -17,9 +17,15 @@
 <img src="Logos/Bounce.png" id="bounceImg" style="cursor: pointer; width:200px">
 
 <script>
-document.getElementById("bounceImg").onclick = function() {
+document.getElementById("bounceImg").onclick = function () {
     let script = document.createElement("script");
     script.src = "Bounce.js";
+
+    script.onload = function () {
+        // THIS is the important part
+        startBounce();
+    };
+
     document.body.appendChild(script);
 };
 </script>
