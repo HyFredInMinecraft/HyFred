@@ -14,14 +14,26 @@
   <body>
       
 
-<img src="Logos/Bounce.png" id="bounceImg" style="cursor: pointer; width:200px">
+<img src="Logos/Bounce.png" onclick="loadP5Sketch()" style="cursor:pointer; width:200px;">
 
-<script>
+  <!-- The p5 canvas will be added here -->
+  <div id="p5-container"></div>
 
-document.getElementById("bounceImg").onclick = function () {
-    <script src="Bounce.js" style="width:200%"></script>
-    
-};
-</script>
+  <script>
+    function loadP5Sketch() {
+      // 1. Load the p5.js core library first
+      const p5Lib = document.createElement('script');
+      p5Lib.src = "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js";
+      
+      p5Lib.onload = () => {
+        // 2. Load your specific sketch file after the library is ready
+        const mySketch = document.createElement('script');
+        mySketch.src = "Bounce.js"; 
+        document.body.appendChild(mySketch);
+      };
+
+      document.body.appendChild(p5Lib);
+    }
+  </script>
   </body>
 </html>
